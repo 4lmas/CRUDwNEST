@@ -9,6 +9,9 @@ export class Profile {
     @Column()
     firstname: string
 
+    @Column()
+    lastname: string
+
     @Column({nullable: true})
     age: number
 }

@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Profile } from './profile.entity';
+import { Post } from 'src/post/post.entity';
 
 @Entity()
 export class User {
@@ -22,4 +23,7 @@ export class User {
     @OneToOne( ()=> Profile)
     @JoinColumn()
     profile: Profile
+
+    @OneToMany( () => Post, post => post.author)
+    post: Post[]
 }
