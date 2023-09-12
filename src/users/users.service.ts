@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from 'src/dto/create-user.dto'; // The dto file is created to have control over what types of data will reach the user object
+import { UpdateUserDto } from 'src/dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,13 +13,64 @@ export class UsersService {
 
     //Define the type of data of user
     // isnt necesesary the use of the Promise but is recomended
-    async createUser(user: CreateUserDto): Promise<User> {
+    async CreateUser(user: CreateUserDto) {
+
+        const userFound = await this.userRepository.findOne({
+            where: {
+                username: user.username
+            }
+        })
+
+        if (userFound) {
+            return new HttpException("El usuario ya existe ", HttpStatus.BAD_REQUEST)
+        }
+
         const newUser = this.userRepository.create(user)
         return await this.userRepository.save(newUser)
     };
 
-    async getUsers(): Promise<User[]>{
+
+    async GetUsers(): Promise<User[]>{
         return await this.userRepository.find();
     };
+
+    async GetUserById(id: number) {
+        return await this.userRepository.findOne({
+            where: {
+                id
+            }
+        })
+    }
+
+    async DeleteUser(id: number) {
+        const userFound = await this.userRepository.findOne({
+            where: {
+                id
+            }
+        })
+
+        if (!userFound){
+            return new HttpException("User not found", HttpStatus.NOT_FOUND)
+        }
+
+        return await this.userRepository.delete({ id });
+    }
+
+    async UpdateUser(id: number, user: UpdateUserDto){
+        const userFound = await this.userRepository.findOne({
+            where: {
+                id
+            }
+        })
+
+        if(!userFound) {
+            return new HttpException("User not found ", HttpStatus.NOT_FOUND)
+        }
+
+        const updateUser = Object.assign(userFound, user);
+
+        return await this.userRepository.save(updateUser)
+    }
+
 
 };

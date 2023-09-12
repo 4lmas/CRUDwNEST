@@ -1,9 +1,12 @@
+/* eslint-disable prettier/prettier */
+
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
+import { Profile } from './users/profile.entity';
 
 @Module({
   imports: [
@@ -14,7 +17,7 @@ import { User } from './users/user.entity';
       username: 'root',
       password: '159753258aA',
       database: 'secondcrud',
-      entities: [User],
+      entities: [User, Profile],
       synchronize: true,
     }),
     UsersModule,
