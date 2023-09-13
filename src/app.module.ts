@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { Profile } from './users/profile.entity';
+import { Post } from './post/post.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { Profile } from './users/profile.entity';
       username: 'root',
       password: '159753258aA',
       database: 'secondcrud',
-      entities: [User, Profile],
+      entities: [User, Profile, Post],
       synchronize: true,
     }),
     UsersModule,
